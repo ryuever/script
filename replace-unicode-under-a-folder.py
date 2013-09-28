@@ -21,6 +21,6 @@ else:
 
         for s in input_file:
             # output_file.write(s.decode("utf-8").replace(stext.decode("unicode-escape"), rtext).encode("utf-8"))
-            output_file.write(s.decode("utf-8").replace(stext.decode("unicode-escape"), rtext))
+            output_file.write(s.decode("utf-8").replace(stext.decode("unicode-escape"), rtext).encode("utf-8"))
         output_file.close( )
         input_file.close( )

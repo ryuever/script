@@ -18,6 +18,14 @@ else:
     for s in input_file:
         # output_file.write(s.decode("utf-8").replace(u"\u00a0", "").encode("utf-8"))
         output_file.write(s.decode("utf-8").replace(stext.decode("unicode-escape"), rtext).encode("utf-8"))
+
+        # below test take "縊"=u"\u7e0a"="\xe7\xb8\x8a" as example
+        # if you input a chinese character, you should use below statement instead.
+        # output_file.write(s.decode("utf-8").replace(unicode(stext,"utf-8"), rtext).encode("utf-8"))
+        
+        # output_file.write(s.decode("utf-8").replace(u"\xe7\xb8\x8a", rtext).encode("utf-8")) not work
+        # output_file.write(s.decode("utf-8").replace(u"\ue7b88a", rtext).encode("utf-8"))  work
+        # output_file.write(s.decode("utf-8").replace(unicode("\xe7\xb8\x8a","utf-8"), rtext).encode("utf-8"))
     # print temp
     # print type(temp)
     output_file.close( )

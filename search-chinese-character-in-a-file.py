@@ -12,14 +12,17 @@ temp = re.compile(re_temp)
 
 for filename in os.listdir(path):
     input_file = open(path+filename)
+    # first_time is used to ensure you write the name of matched found file for only one times.
     first_time = True
     matched = False
+    count = 0
     for s in input_file:
         result = temp.match(s)
+        count = count + 1
         if result :
             if first_time:
                 output_file.write("File "+filename + " :\n")
-            output_file.write(s)
+            output_file.write(str(count) + s)
             first_time = False
             matched = True
     if matched:

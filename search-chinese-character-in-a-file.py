@@ -15,6 +15,7 @@ for filename in os.listdir(path):
     # first_time is used to ensure you write the name of matched found file for only one times.
     first_time = True
     matched = False
+    # count the line number
     count = 0
     for s in input_file:
         result = temp.match(s)
@@ -23,6 +24,7 @@ for filename in os.listdir(path):
             if first_time:
                 output_file.write("File "+filename + " :\n")
             output_file.write(str(count) + s)
+            # output_file.write(`count` + s)
             first_time = False
             matched = True
     if matched:

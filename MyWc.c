@@ -1,5 +1,16 @@
 /* Sample implementation of wc utility. */
-     
+/* Extend wc with the function of counting the numbers of Chinese and Japanese characters  
+ *  
+ * Copyright 2014 ryuyutyo<liuyouchao111@gmail.com>
+ *
+ * Because utf-8 code of Chinese or Japanese characters are 3 bytes length and the firt
+ * byte is greater than 0xe3.
+ *
+ * Based on the condition once read a char greater than 0xe3, continue to read 
+ * the following two bytes without any processing except for incrementing ccount. These 
+ * 3 bytes will be regarded as a word.
+*/
+   
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -72,20 +83,46 @@ int getword (FILE *fp){
     return 0;
            
   while ((c = getc (fp)) != EOF){
-    if (isword (c)){
+    /* If the first byte is an alphabet, then increment wcount by 1 
+       and skip from while statement goto the following for loop to 
+       to read the remainding part of this word
+    */    
+    if (isword (c)){        
       wcount++;
       break;
     }
-    COUNT (c);
+    
+    for(; c>= 0xe3;){
+      wcount++;
+      getc(fp);
+      getc(fp);
+      ccount = ccount + 3;
+      return c != EOF;       // back to stream to read next word
+    }
+
+    // if it is non-alphabet, increment ccount. 
+    COUNT (c);               
   }
      
   for (; c != EOF; c = getc (fp)){
-    COUNT (c);
+    COUNT (c);     // increment ccount first, so the following for loop add 2 
+    
+    // "a痒" is regarded as two words. This for loop is used for processing 
+    // the situation. alphabet is immediately followed by a Chinese character.
+    for(; c> 0xe3;){
+      wcount++;
+      getc(fp);
+      getc(fp);
+      ccount = ccount + 2;
+      return c != EOF;
+    }
+
     if (!isword (c))
       break;
   }
-     
-  return c != EOF;
+
+  // back to stream to read a next word
+  return c != EOF;      
 }
            
 /* Process file FILE. */
